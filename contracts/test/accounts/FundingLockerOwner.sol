@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity 0.6.11;
 
-import { IFundingLocker } from "../../interfaces/IFundingLocker.sol";
-
-import { FundingLockerFactory } from "../../FundingLockerFactory.sol";
+import { IFundingLocker }        from "../../interfaces/IFundingLocker.sol";
+import { IFundingLockerFactory } from "../../interfaces/IFundingLockerFactory.sol";
 
 contract FundingLockerOwner {
 
     function fundingLockerFactory_newLocker(address factory, address token) external returns (address) {
-        return FundingLockerFactory(factory).newLocker(token);
+        return IFundingLockerFactory(factory).newLocker(token);
     }
 
     function try_fundingLockerFactory_newLocker(address factory, address token) external returns (bool ok) {
