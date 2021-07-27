@@ -10,7 +10,7 @@ import { FundingLockerFactory } from "../FundingLockerFactory.sol";
 
 import { FundingLockerOwner } from "./accounts/FundingLockerOwner.sol";
 
-contract MintableToken is ERC20 {
+contract MockToken is ERC20 {
 
     constructor (string memory name, string memory symbol) ERC20(name, symbol) public {}
 
@@ -24,7 +24,7 @@ contract FundingLockerFactoryTest is DSTest {
 
     function test_newLocker() external {
         FundingLockerFactory factory  = new FundingLockerFactory();
-        MintableToken        token    = new MintableToken("TKN", "TKN");
+        MockToken            token    = new MockToken("TKN", "TKN");
         FundingLockerOwner   owner    = new FundingLockerOwner();
         FundingLockerOwner   nonOwner = new FundingLockerOwner();
 
