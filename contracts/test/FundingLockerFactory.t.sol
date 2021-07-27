@@ -14,7 +14,7 @@ contract MintableToken is ERC20 {
 
     constructor (string memory name, string memory symbol) ERC20(name, symbol) public {}
 
-    function mint(address account, uint256 amount) public {
+    function mint(address account, uint256 amount) external {
         _mint(account, amount);
     }
 
@@ -22,10 +22,10 @@ contract MintableToken is ERC20 {
 
 contract FundingLockerFactoryTest is DSTest {
 
-    function test_newLocker() public {
-        FundingLockerFactory  factory = new FundingLockerFactory();
-        MintableToken           token = new MintableToken("TKN", "TKN");
-        FundingLockerOwner      owner = new FundingLockerOwner();
+    function test_newLocker() external {
+        FundingLockerFactory factory  = new FundingLockerFactory();
+        MintableToken        token    = new MintableToken("TKN", "TKN");
+        FundingLockerOwner   owner    = new FundingLockerOwner();
         FundingLockerOwner   nonOwner = new FundingLockerOwner();
 
         IFundingLocker locker = IFundingLocker(owner.fundingLockerFactory_newLocker(address(factory), address(token)));
@@ -35,7 +35,7 @@ contract FundingLockerFactoryTest is DSTest {
         assertTrue(factory.isLocker(address(locker)),            "Invalid isLocker");
 
         // Validate the storage of locker.
-        assertEq(locker.loan(), address(owner),                    "Incorrect loan address");
+        assertEq(locker.loan(),                    address(owner), "Incorrect loan address");
         assertEq(address(locker.liquidityAsset()), address(token), "Incorrect address of liquidity asset");
 
         // Assert that only the FundingLocker owner can access funds

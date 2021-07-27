@@ -8,7 +8,7 @@ import { FundingLockerFactory } from "../../FundingLockerFactory.sol";
 contract FundingLockerOwner {
 
     function fundingLockerFactory_newLocker(address factory, address token) external returns (address) {
-        return address(IFundingLocker(FundingLockerFactory(factory).newLocker(token)));
+        return FundingLockerFactory(factory).newLocker(token);
     }
 
     function try_fundingLockerFactory_newLocker(address factory, address token) external returns (bool ok) {
