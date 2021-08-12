@@ -1,0 +1,11 @@
+name: funding-locker
+version: 1.0.0
+source: contracts
+packages:
+  - path: contracts/FundingLockerFactory.sol
+    contractName: FundingLockerFactory
+    customChecksum: 0x3ad5514ed43d78437e4d05ecd3cb7758148f44fd50fd3bf79d3da1967a4b495a
+  - path: contracts/FundingLocker.sol
+    contractName: FundingLocker
+    customChecksum: 0x883ee824136b7a27dd8b32dfd22c5ec49a4da8de974e787f19b603a6bb202ea7
+customDescription: Funding Locker Artifacts and ABIs
