@@ -10,11 +10,11 @@ contract FundingLocker is IFundingLocker {
 
     using SafeERC20 for IERC20;
 
-    IERC20  public override immutable liquidityAsset;
+    address public override immutable liquidityAsset;
     address public override immutable loan;
 
     constructor(address _liquidityAsset, address _loan) public {
-        liquidityAsset = IERC20(_liquidityAsset);
+        liquidityAsset = _liquidityAsset;
         loan           = _loan;
     }
 
@@ -27,12 +27,12 @@ contract FundingLocker is IFundingLocker {
     }
 
     function pull(address dst, uint256 amt) isLoan external override {
-        liquidityAsset.safeTransfer(dst, amt);
+        IERC20(liquidityAsset).safeTransfer(dst, amt);
     }
 
     function drain() isLoan external override {
-        uint256 amt = liquidityAsset.balanceOf(address(this));
-        liquidityAsset.safeTransfer(loan, amt);
+        uint256 amt = IERC20(liquidityAsset).balanceOf(address(this));
+        IERC20(liquidityAsset).safeTransfer(loan, amt);
     }
 
 }

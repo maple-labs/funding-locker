@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity 0.6.11;
 
-import { IERC20 } from "../../modules/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-
 /// @title FundingLocker holds custody of Liquidity Asset tokens during the funding period of a Loan.
 interface IFundingLocker {
 
     /**
         @dev The asset the Loan was funded with.
     */
-    function liquidityAsset() external view returns (IERC20);
+    function liquidityAsset() external view returns (address);
 
     /**
         @dev The Loan this FundingLocker has funded.
