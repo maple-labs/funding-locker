@@ -8,7 +8,7 @@ import { IFundingLocker } from "../interfaces/IFundingLocker.sol";
 
 import { FundingLockerFactory } from "../FundingLockerFactory.sol";
 
-import { FundingLockerOwner } from "./accounts/FundingLockerOwner.sol";
+import { Loan } from "./accounts/Loan.sol";
 
 contract MockToken is ERC20 {
 
@@ -23,27 +23,27 @@ contract MockToken is ERC20 {
 contract FundingLockerFactoryTest is DSTest {
 
     function test_newLocker() external {
-        FundingLockerFactory factory  = new FundingLockerFactory();
-        MockToken            token    = new MockToken("TKN", "TKN");
-        FundingLockerOwner   owner    = new FundingLockerOwner();
-        FundingLockerOwner   nonOwner = new FundingLockerOwner();
+        FundingLockerFactory factory = new FundingLockerFactory();
+        MockToken            token   = new MockToken("TKN", "TKN");
+        Loan                 loan    = new Loan();
+        Loan                 notLoan = new Loan();
 
-        IFundingLocker locker = IFundingLocker(owner.fundingLockerFactory_newLocker(address(factory), address(token)));
+        IFundingLocker locker = IFundingLocker(loan.fundingLockerFactory_newLocker(address(factory), address(token)));
 
         // Validate the storage of factory.
-        assertEq(factory.owner(address(locker)), address(owner), "Invalid owner");
-        assertTrue(factory.isLocker(address(locker)),            "Invalid isLocker");
+        assertEq(factory.owner(address(locker)), address(loan), "Invalid owner");
+        assertTrue(factory.isLocker(address(locker)),           "Invalid isLocker");
 
         // Validate the storage of locker.
-        assertEq(locker.loan(),                    address(owner), "Incorrect loan address");
+        assertEq(locker.loan(),                    address(loan),  "Incorrect loan address");
         assertEq(address(locker.liquidityAsset()), address(token), "Incorrect address of liquidity asset");
 
         // Assert that only the FundingLocker owner can access funds
         token.mint(address(locker), 10);
-        assertTrue(!nonOwner.try_fundingLocker_pull(address(locker), address(owner), 1), "Pull succeeded from nonOwner");
-        assertTrue(    owner.try_fundingLocker_pull(address(locker), address(owner), 1), "Pull failed from owner");
-        assertTrue(!nonOwner.try_fundingLocker_drain(address(locker)),                   "Drain succeeded from nonOwner");
-        assertTrue(    owner.try_fundingLocker_drain(address(locker)),                   "Drain failed from owner");
+        assertTrue(!notLoan.try_fundingLocker_pull(address(locker), address(loan), 1), "Pull succeeded from notLoan");
+        assertTrue(    loan.try_fundingLocker_pull(address(locker), address(loan), 1), "Pull failed from loan");
+        assertTrue(!notLoan.try_fundingLocker_drain(address(locker)),                  "Drain succeeded from notLoan");
+        assertTrue(    loan.try_fundingLocker_drain(address(locker)),                  "Drain failed from loan");
     }
 
 }

@@ -4,30 +4,38 @@ pragma solidity 0.6.11;
 import { IFundingLocker }        from "../../interfaces/IFundingLocker.sol";
 import { IFundingLockerFactory } from "../../interfaces/IFundingLockerFactory.sol";
 
-contract FundingLockerOwner {
+contract Loan {
+
+    /************************/
+    /*** Direct Functions ***/
+    /************************/
 
     function fundingLockerFactory_newLocker(address factory, address token) external returns (address) {
         return IFundingLockerFactory(factory).newLocker(token);
-    }
-
-    function try_fundingLockerFactory_newLocker(address factory, address token) external returns (bool ok) {
-        (ok,) = factory.call(abi.encodeWithSignature("newLocker(address)", token));
     }
 
     function fundingLocker_pull(address locker, address destination, uint256 amount) external {
         IFundingLocker(locker).pull(destination, amount);
     }
 
-    function try_fundingLocker_pull(address locker, address destination, uint256 amount) external returns (bool ok) {
-        (ok,) = locker.call(abi.encodeWithSignature("pull(address,uint256)", destination, amount));
-    }
-
     function fundingLocker_drain(address locker) external {
         IFundingLocker(locker).drain();
     }
 
+    /*********************/
+    /*** Try Functions ***/
+    /*********************/
+
+    function try_fundingLockerFactory_newLocker(address factory, address token) external returns (bool ok) {
+        (ok,) = factory.call(abi.encodeWithSelector(IFundingLockerFactory.newLocker.selector, token));
+    }
+
+    function try_fundingLocker_pull(address locker, address destination, uint256 amount) external returns (bool ok) {
+        (ok,) = locker.call(abi.encodeWithSelector(IFundingLocker.pull.selector, destination, amount));
+    }
+
     function try_fundingLocker_drain(address locker) external returns (bool ok) {
-        (ok,) = locker.call(abi.encodeWithSignature("drain()"));
+        (ok,) = locker.call(abi.encodeWithSelector(IFundingLocker.drain.selector));
     }
 
 }
